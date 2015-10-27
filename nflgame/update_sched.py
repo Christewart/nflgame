@@ -75,21 +75,25 @@ def week_schedule(year, stype, week):
             'away': g.getAttribute('v'),
             'gamekey': g.getAttribute('gsis'),
         })
-    #find if there is a 9 oclock game that occurs BEFORE a 1 oclock game on Sunday
-    #if this is the case, assume that the time is 9 AM instead of PM 
-    
+    games = assign_am_pm(games) 
+    return games
+
+
+def assign_am_pm(games): 
+    """
+    Assigns and AM or PM time for games this week 
+    """
     for index,g in enumerate(games): 
         #if the current games hour is 9, and the next games hour is 1
         #assume that the current game buts be a 9 AM game, instead of a 9 PM game
-        if "9" in g['time'] and "1" in games[index+1]['time']:
+        hour,minute = g['time'].split(':') 
+        if '9' == hour  and '1' == games[index+1]['time'].split(':')[0]:
             g['time'] += " AM" 
         else: 
             g['time'] += " PM"
 
         print(g,index)
     return games
-
-
 def new_schedule():
     """
     Builds an entire schedule from scratch.
